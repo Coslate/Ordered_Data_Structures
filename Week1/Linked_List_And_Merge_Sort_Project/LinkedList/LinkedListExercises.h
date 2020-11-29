@@ -80,7 +80,41 @@
 
 template <typename T>
 void LinkedList<T>::insertOrdered(const T& newData) {
+    Node *inserted_node = new Node(newData);
 
+    if(!head_){
+        head_ = inserted_node;
+        tail_ = inserted_node;
+        ++size_;
+    }else{
+        Node *trav_node = head_;
+        while(trav_node){
+            if(trav_node->data<newData && trav_node->next==nullptr){
+                trav_node->next     = inserted_node;
+                inserted_node->prev = trav_node;
+                tail_ = inserted_node;
+                break;
+            }else if(trav_node->data<newData){
+                trav_node = trav_node->next;
+                continue;
+            }else{
+                if(trav_node == head_){
+                    trav_node->prev     = inserted_node;
+                    inserted_node->next = trav_node;
+                    head_ = inserted_node;
+                    break;
+                }else{
+                    trav_node->prev->next = inserted_node;
+                    inserted_node->prev   = trav_node->prev;
+                    trav_node->prev       = inserted_node;
+                    inserted_node->next   = trav_node;
+                    break;
+                }
+            }
+        }
+
+        ++size_;
+    }
   // -----------------------------------------------------------
   // TODO: Your code here!
   // -----------------------------------------------------------
@@ -222,6 +256,28 @@ LinkedList<T> LinkedList<T>::merge(const LinkedList<T>& other) const {
   // the final result we want. This is what we will return at the end of
   // the function.
   LinkedList<T> merged;
+
+  while((!left.empty()) && (!right.empty())){
+      if(left.front() <= right.front()){
+        merged.pushBack(left.front());
+        left.popFront();
+      }else{
+        merged.pushBack(right.front());
+        right.popFront();
+      }
+  }
+
+  if(left.size() != 0){
+    while(!left.empty()){
+        merged.pushBack(left.front());
+        left.popFront();
+    }
+  }else if(right.size() != 0){
+    while(!right.empty()){
+        merged.pushBack(right.front());
+        right.popFront();
+    }
+  }
 
   // -----------------------------------------------------------
   // TODO: Your code here!
