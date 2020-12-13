@@ -97,6 +97,13 @@ static void treeFactory(GenericTree<int>& tree) {
   // when you print it out. The main() function runs that test for you.
 
   // ...
+  tree.clear();
+  auto root_node        = tree.createRoot(4);
+  auto node_eight       = root_node->addChild(8);
+  auto node_fifteen     = root_node->addChild(15);
+  auto node_sixteen     = node_eight->addChild(16);
+  auto node_twentythree = node_eight->addChild(23);
+  auto node_fortytwo    = node_sixteen->addChild(42);
 
 }
 
@@ -326,6 +333,28 @@ std::vector<T> traverseLevels(GenericTree<T>& tree) {
 
   // ...
 
+  std::queue<TreeNode*> nodesToExplore;
+
+  // Begin by pushing our subtree root pointer onto the stack
+  nodesToExplore.push(rootNodePtr);
+
+  // Loop while there are still nodes to explore
+  while (!nodesToExplore.empty()) {
+
+    TreeNode* topNode = nodesToExplore.front();
+    nodesToExplore.pop();
+
+    if (!topNode) {
+      continue;
+    }
+
+    results.push_back(topNode->data);
+
+    for (auto childPtr : topNode->childrenPtrs) {
+      nodesToExplore.push(childPtr);
+    }
+
+  }
   return results;
 }
 
